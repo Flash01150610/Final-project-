@@ -47,7 +47,7 @@ function preload() {
     this.load.image('ground', 'platform.png');
     this.load.image('star', 'star.png');
     this.load.image('bomb', 'bomb.png');
-    this.load.image('monkey', 'monkey.png'); // Ensure this path is correct
+    this.load.image('monkey', 'monkey.png'); 
    }
 
 function create() {
@@ -116,8 +116,8 @@ this.add.image(400, 300, 'sky');
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
-    this.physics.add.overlap(player, stars, collectStar, null, this);
-    this.physics.add.collider(player, bombs, hitBomb, null, this);
+    this.physics.add.overlap(monkey, stars, collectStar,);
+    this.physics.add.collider(monkey, bombs, hitBomb, );
 }
 
 function collectStar(player, star) {
