@@ -37,7 +37,7 @@
             this.load.image('bomb', 'assets/bomb.png');
             this.load.image('monkey', 'assets/monkey.png');
             this.load.image('banana', 'assets/banana.png');
-            this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+            this.load.spritesheet('dude', 'assets/monkey.png', { frameWidth: 32, frameHeight: 48 });
         }
 
         function create() {
