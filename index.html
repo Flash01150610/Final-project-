@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Phaser Test</title>
+    <title>final project</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
 </head>
 <body>
@@ -20,7 +20,12 @@
         var game = new Phaser.Game(config);
 
         function preload() {
-            this.load.image('sky', 'sky.png'); // Make sure the file exists
+            this.load.image('sky', 'sky.png');
+            this.load.image('monkey, 'monkey.png');
+            this.load.image('platform, 'platform.png');
+            this.load.image('banana, 'banana.png');
+            this.load.image('bomb, 'bomb.png');
+            this.load.image('star,'star.png');
         }
 
         function create() {
