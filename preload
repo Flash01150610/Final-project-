@@ -38,7 +38,6 @@
             this. load.image('bomb', 'assets/bomb.png');
             this.load.image('banana, 'assets/banana.png');
             this.load.image('monkey, 'assets/monkey.png');
-            this. load.sprite sheet('monkey,'assets/monkey.png', { frame width: 32, frame height: 48 });
         }
         function create() {
             // Add background image
