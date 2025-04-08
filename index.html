@@ -146,7 +146,7 @@ function collectStar(player, star) {
     player.setVelocityX(0);
 
     // Move left
-    if (this.keys.w.isDown) {
+    if (this.keys.left.isDown) {
         player.setVelocityX(-160);
         player.anims.play('left', true);
     } 
