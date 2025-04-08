@@ -54,6 +54,50 @@
         frameRate: 10,
         repeat: -1
     });
+ // Player animations
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('monkey', { start: 0, end: 3 }), // Adjust if needed
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [{ key: 'monkey', frame: 4 }], // Adjust if needed
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('monkey', { start: 5, end: 8 }), // Adjust if needed
+        frameRate: 10,
+        repeat: -1
+    });
+
+    // Create bananas to collect
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+
+    stars.children.iterate(function (child) {
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
+
+    bombs = this.physics.add.group();
+
+    // Score text
+    scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+
+    // Collisions and overlaps
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.collider(bombs, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+}
 
         }
     </script>
