@@ -79,6 +79,14 @@ function create ()
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
+        // Create keys for WASD controls plus the down key
+    this.keys = this.input.keyboard.addKeys({
+        left: Phaser.Input.Keyboard.KeyCodes.A,
+        right: Phaser.Input.Keyboard.KeyCodes.D,
+        up: Phaser.Input.Keyboard.KeyCodes.W,
+        down: Phaser.Input.Keyboard.KeyCodes.S
+    });
+
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
@@ -173,13 +181,13 @@ function update() {
     // Reset velocity before handling inputs
     player.setVelocityX(0); 
 
-    // Move left if the left key is pressed
-    if (left.isDown) {
+    // Move left if the A key is pressed
+    if (this.keys.left.isDown) {
         player.setVelocityX(-160); // Set player's velocity to the left
         player.anims.play('left', true); // Play the left animation
     } 
-    // Move right if the right key is pressed
-    else if (right.isDown) {
+    // Move right if the D key is pressed
+    else if (this.keys.right.isDown) {
         player.setVelocityX(160); // Set player's velocity to the right
         player.anims.play('right', true); // Play the right animation
     } 
@@ -188,10 +196,21 @@ function update() {
         player.anims.play('turn'); // Play the 'turn' animation
     }
 
-    // Jump if the up key is pressed and player is touching the ground
-    if (cursors.up.isDown && player.body.touching.down) {
+    // Jump if the W key is pressed and player is touching the ground
+    if (this.keys.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330); // Set player's velocity for the jump
     }
+
+    // Crouch if the S key is pressed
+    if (this.keys.down.isDown) {
+        // Placeholder for crouch logic
+        player.anims.play('crouch', true); // Assuming you have a 'crouch' animation
+        player.setVelocityY(0); // Optionally reduce velocity while crouching
+        // Additional crouch behavior can be added here
+    }
+}   
+
+
 function hitBomb (monkey, bomb)
 {
     this.physics.pause();
