@@ -136,37 +136,6 @@ function create ()
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
-function update ()
-{
-    if (gameOver)
-    {
-        return;
-    }
-
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-
-        player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-
-        player.anims.play('right', true);
-    }
-    else
-    {
-        player.setVelocityX(0);
-
-        player.anims.play('turn');
-    }
-
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
-    }
-}
 
 function collectStar (player, star)
 {
@@ -195,7 +164,34 @@ function collectStar (player, star)
 
     }
 }
+function update() {
+    // Check if the game is over
+    if (gameOver) {
+        return; // Exit the function if the game is over
+    }
 
+    // Reset velocity before handling inputs
+    player.setVelocityX(0); 
+
+    // Move left if the left key is pressed
+    if (left.isDown) {
+        player.setVelocityX(-160); // Set player's velocity to the left
+        player.anims.play('left', true); // Play the left animation
+    } 
+    // Move right if the right key is pressed
+    else if (right.isDown) {
+        player.setVelocityX(160); // Set player's velocity to the right
+        player.anims.play('right', true); // Play the right animation
+    } 
+    // If no horizontal movement keys are pressed
+    else {
+        player.anims.play('turn'); // Play the 'turn' animation
+    }
+
+    // Jump if the up key is pressed and player is touching the ground
+    if (cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330); // Set player's velocity for the jump
+    }
 function hitBomb (monkey, bomb)
 {
     this.physics.pause();
