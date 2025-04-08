@@ -138,7 +138,39 @@ function collectStar(player, star) {
         bomb.allowGravity = false;
     }
 }
+   if (gameOver) {
+        return; // Exit if the game is over
+    }
 
+    // Reset player's velocity
+    player.setVelocityX(0);
+
+    // Move left
+    if (this.keys.w.isDown) {
+        player.setVelocityX(-160);
+        player.anims.play('left', true);
+    } 
+    // Move right
+    else if (this.keys.right.isDown) {
+        player.setVelocityX(160);
+        player.anims.play('right', true);
+    } 
+    // Idle
+    else {
+        player.anims.play('turn'); 
+    }
+
+    // Jump
+    if (this.keys.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330); 
+    }
+
+    // Crouch (Uncomment and define if needed)
+    if (this.keys.down.isDown) {
+        // player.anims.play('crouch', true); 
+        player.setVelocityY(0); 
+    }
+}
 function update() {
  function hitBomb(player, bomb) {
     this.physics.pause();
