@@ -48,14 +48,12 @@ function preload() {
     this.load.image('star', 'star.png');
     this.load.image('bomb', 'bomb.png');
     this.load.image('monkey', 'monkey.png'); // Ensure this path is correct
-    // Uncomment if you have a crouch image: this.load.image('crouch', 'crouchImage.png'); 
-}
+   }
 
 function create() {
-    // Add a simple background for our game
-    this.add.image(400, 300, 'sky');
 
-    // The platforms group contains the ground
+this.add.image(400, 300, 'sky');
+
     platforms = this.physics.add.staticGroup();
 
     // Create ground
