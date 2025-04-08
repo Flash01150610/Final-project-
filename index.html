@@ -32,7 +32,7 @@ var config = {
     }
 };
 
-var player;   // Changed from monkey to player
+var player;   // Declare player variable
 var stars;
 var bombs;
 var platforms;
@@ -42,19 +42,17 @@ var scoreText;
 
 var game = new Phaser.Game(config);
 
-function preload ()
-{
+function preload() {
     this.load.image('sky', 'sky.png');
     this.load.image('ground', 'platform.png');
     this.load.image('star', 'star.png');
     this.load.image('bomb', 'bomb.png');
     this.load.image('monkey', 'monkey.png');
-    // Add crouch animation if you have an image for this
+    // Uncomment the following line if you have a crouch image
     // this.load.image('crouch', 'crouchImage.png'); 
 }
 
-function create ()
-{
+function create() {
     // Add a simple background for our game
     this.add.image(400, 300, 'sky');
 
@@ -83,7 +81,7 @@ function create ()
     // Player animations
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('monkey', { start: 0, end: 3 }), // Adjust frame numbers if necessary
+        frames: this.anims.generateFrameNumbers('monkey', { start: 0, end: 3 }), // Ensure frames match your sprite
         frameRate: 10,
         repeat: -1
     });
@@ -96,7 +94,7 @@ function create ()
 
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('monkey', { start: 5, end: 8 }), // Adjust frame numbers if necessary
+        frames: this.anims.generateFrameNumbers('monkey', { start: 5, end: 8 }), // Ensure frames match your sprite
         frameRate: 10,
         repeat: -1
     });
@@ -125,7 +123,7 @@ function create ()
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
-function collectStar (player, star) {
+function collectStar(player, star) {
     star.disableBody(true, true);
     score += 10;
     scoreText.setText('Score: ' + score);
@@ -146,7 +144,7 @@ function collectStar (player, star) {
 
 function update() {
     if (gameOver) {
-        return; // Exit if game is over
+        return; // Exit if the game is over
     }
 
     // Reset player's velocity
@@ -174,13 +172,14 @@ function update() {
 
     // Crouch
     if (this.keys.down.isDown) {
-        // Placeholder for crouch logic
-        player.anims.play('crouch', true); // If you define this animation
+        // Handle crouch action
+        // You will need to define this animation before using it!
+        // player.anims.play('crouch', true); // Uncomment if you implement a crouch animation
         player.setVelocityY(0); 
     }
 }
 
-function hitBomb (player, bomb) {
+function hitBomb(player, bomb) {
     this.physics.pause();
     player.setTint(0xff0000);
     player.anims.play('turn');
