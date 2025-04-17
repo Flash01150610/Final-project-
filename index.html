@@ -40,6 +40,7 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var isPaused = false; // Track whether the game is paused or not
 
 var game = new Phaser.Game(config);
 
@@ -107,10 +108,11 @@ function create () {
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
     this.input.keyboard.on('keydown-R', restartGame, this); // Restart on 'R' key
+    this.input.keyboard.on('keydown-SPACE', togglePause, this); // Toggle pause on SPACE bar
 }
 
 function update () {
-    if (gameOver) {
+    if (gameOver || isPaused) {
         return;
     }
 
@@ -173,6 +175,17 @@ function restartGame() {
 
     // Recreate the game state
     create.call(this);
+}
+
+function togglePause() {
+    if (gameOver) return; // Don't toggle pause if the game is over
+
+    isPaused = !isPaused;
+    if (isPaused) {
+        this.physics.pause();
+    } else {
+        this.physics.resume();
+    }
 }
 
 </script>
