@@ -33,7 +33,7 @@ var config = {
 };
 
 var player;
-var bananas;  // Changed from stars to bananas
+var bananas;  
 var bombs;
 var platforms;
 var cursors;
@@ -46,7 +46,6 @@ var game = new Phaser.Game(config);
 function preload () {
     this.load.image('sky', 'sky.png');
     this.load.image('ground', 'platform.png');
-    this.load.image('banana', 'banana.png'); // Load the banana asset
     this.load.image('bomb', 'bomb.png');
     this.load.spritesheet('monkey', 'monkey.png', { frameWidth: 32, frameHeight: 48 });
 }
@@ -86,28 +85,41 @@ function create () {
 
     cursors = this.input.keyboard.createCursorKeys();
 
-    // Changed from stars to bananas
-    bananas = this.physics.add.group({
-        key: 'banana',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
-
-    bananas.children.iterate(function (child) {
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-    });
+    // Create bananas using Graphics
+    bananas = this.physics.add.group();
+    createBanana(this, 12, 0);
+    for (var i = 1; i <= 11; i++) {
+        createBanana(this, 12 + i * 70, 0);
+    }
 
     bombs = this.physics.add.group();
-
+    
     scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(bananas, platforms); // Changed to bananas
+    this.physics.add.collider(bananas, platforms);
     this.physics.add.collider(bombs, platforms);
-    this.physics.add.overlap(player, bananas, collectBanana, null, this); // Changed to collectBanana
+    this.physics.add.overlap(player, bananas, collectBanana, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
     this.input.keyboard.on('keydown-R', restartGame, this); // Restart on 'R' key
+}
+
+function createBanana(scene, x, y) {
+    var graphics = scene.add.graphics();
+    graphics.fillStyle(0xf0e68c, 1); // Bananas color
+    graphics.beginPath();
+    graphics.moveTo(x, y);
+    graphics.bezierCurveTo(x + 10, y - 10, x + 20, y, x + 15, y + 10); // Shape of banana
+    graphics.bezierCurveTo(x + 30, y + 20, x + 10, y + 30, x, y + 15); // Shape of banana
+    graphics.closePath();
+    graphics.endPath();
+    
+    // Create banana physics
+    var banana = scene.physics.add.staticSprite(x, y, null);
+    banana.setTexture(graphics.generateTexture('banana', 1, 1));
+    scene.physics.add.existing(banana);  // Make sure it's recognized by physics
+    bananas.add(banana);  // Add to bananas group
 }
 
 function update () {
@@ -131,16 +143,15 @@ function update () {
     }
 }
 
-// Changed collectStar to collectBanana
 function collectBanana(player, banana) {
     banana.disableBody(true, true);
     score += 10;
     scoreText.setText('Score: ' + score);
 
     if (bananas.countActive(true) === 0) {
-        bananas.children.iterate(function (child) {
-            child.enableBody(true, child.x, 0, true, true);
-        });
+        for (var i = 0; i < 12; i++) {
+            createBanana(this, 12 + i * 70, 0);
+        }
 
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
         var bomb = bombs.create(x, 16, 'bomb');
