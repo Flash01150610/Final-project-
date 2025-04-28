@@ -1,6 +1,6 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
+<!doctype html>
+<html lang="en">
+<head>
     <meta charset="UTF-8" />
     <title>Making your first Phaser 3 Game - Part 10</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
@@ -33,7 +33,7 @@ var config = {
 };
 
 var player;
-var stars;
+var coins; // Changed from stars to coins
 var bombs;
 var platforms;
 var cursors;
@@ -47,7 +47,7 @@ var game = new Phaser.Game(config);
 function preload () {
     this.load.image('sky', 'sky.png');
     this.load.image('ground', 'platform.png');
-    this.load.image('star', 'star.png');
+    this.load.image('coin', 'coin.png'); // Changed from star to coin
     this.load.image('bomb', 'bomb.png');
     this.load.spritesheet('monkey', 'monkey.png', { frameWidth: 32, frameHeight: 48 });
 }
@@ -87,13 +87,13 @@ function create () {
 
     cursors = this.input.keyboard.createCursorKeys();
 
-    stars = this.physics.add.group({
-        key: 'star',
+    coins = this.physics.add.group({
+        key: 'coin', // Changed from star to coin
         repeat: 11,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
 
-    stars.children.iterate(function (child) {
+    coins.children.iterate(function (child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     });
 
@@ -102,9 +102,9 @@ function create () {
     scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
+    this.physics.add.collider(coins, platforms); // Updated
     this.physics.add.collider(bombs, platforms);
-    this.physics.add.overlap(player, stars, collectStar, null, this);
+    this.physics.add.overlap(player, coins, collectCoin, null, this); // Updated
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
     this.input.keyboard.on('keydown-R', restartGame, this); // Restart on 'R' key
@@ -132,13 +132,13 @@ function update () {
     }
 }
 
-function collectStar (player, star) {
-    star.disableBody(true, true);
+function collectCoin (player, coin) { // Updated to collectCoin
+    coin.disableBody(true, true);
     score += 10;
     scoreText.setText('Score: ' + score);
 
-    if (stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
+    if (coins.countActive(true) === 0) {
+        coins.children.iterate(function (child) {
             child.enableBody(true, child.x, 0, true, true);
         });
 
@@ -169,9 +169,9 @@ function restartGame() {
     player.setPosition(100, 450);
     player.setVelocity(0);
     
-    // Clear existing bombs and stars
+    // Clear existing bombs and coins
     bombs.clear(true, true);
-    stars.clear(true, true);
+    coins.clear(true, true); // Updated
 
     // Recreate the game state
     create.call(this);
