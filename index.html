@@ -48,12 +48,12 @@ var game = new Phaser.Game(config);
 function preload () {
     this.load.image('sky', 'sky.png');
     this.load.image('ground', 'platform.png');
-    this.load.image('coin', 'coin.png');
+    this.load.image('coin', 'coin.png'); 
     this.load.image('bomb', 'bomb.png');
     this.load.spritesheet('monkey', 'monkey.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.audio('backgroundMusic', 'happy_background.mp3'); // Load the audio file
+}
 
-    // Load the background music
-    this.load.audio('backgroundMusic', 'happy_background.mp3'); 
 function create () {
     this.add.image(400, 300, 'sky');
 
@@ -109,13 +109,17 @@ function create () {
     this.physics.add.overlap(player, coins, collectCoin, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
-    this.input.keyboard.on('keydown-R', restartGame, this);
-    this.input.keyboard.on('keydown-SPACE', togglePause, this);
+    this.input.keyboard.on('keydown-R', restartGame, this); // Restart on 'R' key
+    this.input.keyboard.on('keydown-SPACE', togglePause, this); // Toggle pause on SPACE bar
 
-    // Create and play background music
-    music = this.sound.add('backgroundMusic');
-    music.setLoop(true); // Loop the music
-    music.play(); // Start playing the music
+    // Create and play background music, but wait for user input
+    this.input.keyboard.on('keydown-SPACE', function () {
+        if (!music) { // Check if music is not yet loaded
+            music = this.sound.add('backgroundMusic');
+            music.setLoop(true); // Make the music loop
+        }
+        music.play(); // Play the music
+    }, this);
 }
 
 function update () {
@@ -163,7 +167,7 @@ function hitBomb (player, bomb) {
     player.setTint(0xff0000);
     player.anims.play('turn');
     gameOver = true;
-    music.stop(); // Stop music when game is over
+    if (music) music.stop(); // Stop music when game is over
 }
 
 function restartGame() {
@@ -181,7 +185,7 @@ function restartGame() {
     coins.clear(true, true);
     create.call(this);
 
-    music.play(); // Replay music when restarted
+    if (music) music.play(); // Replay music when restarted
 }
 
 function togglePause() {
@@ -190,10 +194,10 @@ function togglePause() {
     isPaused = !isPaused;
     if (isPaused) {
         this.physics.pause();
-        music.pause(); // Pause the music
+        if (music) music.pause(); // Pause the music
     } else {
         this.physics.resume();
-        music.resume(); // Resume the music
+        if (music) music.resume(); // Resume the music
     }
 }
 
