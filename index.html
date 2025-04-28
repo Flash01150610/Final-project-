@@ -33,25 +33,23 @@ var config = {
 };
 
 var player;
-var coins;
+var coins; // Changed from stars to coins
 var bombs;
 var platforms;
 var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
-var isPaused = false;
-var music; // Variable for background music
+var isPaused = false; // Track whether the game is paused or not
 
 var game = new Phaser.Game(config);
 
 function preload () {
     this.load.image('sky', 'sky.png');
     this.load.image('ground', 'platform.png');
-    this.load.image('coin', 'coin.png'); 
+    this.load.image('coin', 'coin.png'); // Changed from star to coin
     this.load.image('bomb', 'bomb.png');
     this.load.spritesheet('monkey', 'monkey.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.audio('backgroundMusic', 'happy_background.mp3'); // Load the audio file
 }
 
 function create () {
@@ -90,7 +88,7 @@ function create () {
     cursors = this.input.keyboard.createCursorKeys();
 
     coins = this.physics.add.group({
-        key: 'coin',
+        key: 'coin', // Changed from star to coin
         repeat: 11,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
@@ -104,22 +102,13 @@ function create () {
     scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
 
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(coins, platforms);
+    this.physics.add.collider(coins, platforms); // Updated
     this.physics.add.collider(bombs, platforms);
-    this.physics.add.overlap(player, coins, collectCoin, null, this);
+    this.physics.add.overlap(player, coins, collectCoin, null, this); // Updated
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
     this.input.keyboard.on('keydown-R', restartGame, this); // Restart on 'R' key
     this.input.keyboard.on('keydown-SPACE', togglePause, this); // Toggle pause on SPACE bar
-
-    // Create and play background music, but wait for user input
-    this.input.keyboard.on('keydown-SPACE', function () {
-        if (!music) { // Check if music is not yet loaded
-            music = this.sound.add('backgroundMusic');
-            music.setLoop(true); // Make the music loop
-        }
-        music.play(); // Play the music
-    }, this);
 }
 
 function update () {
@@ -143,7 +132,7 @@ function update () {
     }
 }
 
-function collectCoin (player, coin) {
+function collectCoin (player, coin) { // Updated to collectCoin
     coin.disableBody(true, true);
     score += 10;
     scoreText.setText('Score: ' + score);
@@ -167,11 +156,10 @@ function hitBomb (player, bomb) {
     player.setTint(0xff0000);
     player.anims.play('turn');
     gameOver = true;
-    if (music) music.stop(); // Stop music when game is over
 }
 
 function restartGame() {
-    if (!gameOver) return;
+    if (!gameOver) return; // Only restart if the game is over
 
     gameOver = false;
     score = 0;
@@ -181,23 +169,22 @@ function restartGame() {
     player.setPosition(100, 450);
     player.setVelocity(0);
     
+    // Clear existing bombs and coins
     bombs.clear(true, true);
-    coins.clear(true, true);
-    create.call(this);
+    coins.clear(true, true); // Updated
 
-    if (music) music.play(); // Replay music when restarted
+    // Recreate the game state
+    create.call(this);
 }
 
 function togglePause() {
-    if (gameOver) return;
+    if (gameOver) return; // Don't toggle pause if the game is over
 
     isPaused = !isPaused;
     if (isPaused) {
         this.physics.pause();
-        if (music) music.pause(); // Pause the music
     } else {
         this.physics.resume();
-        if (music) music.resume(); // Resume the music
     }
 }
 
